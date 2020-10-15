@@ -1,6 +1,8 @@
+// MAP MAP MAP//
+//create array of 2019 top 10 hotel market data
 var myMap = L.map("mapidchoro", {
-    center: [36.1868683, -87.065443],
-    zoom: 6,
+    center: [39.8090883,-98.5642993],
+    zoom: 4,
     // layers: [light, cityLayer]
 });
 
@@ -76,48 +78,59 @@ const top_2019 = [{
 }
 ];
 //create fucntion for custom population density shading/coloring for choropleth map
-function getColor(pop_density) {
-    switch (true) {
-        case pop_density > 5000:
-            return "#7f0000";
-        case pop_density > 4000:
-            return "#b30000";
-        case pop_density > 3000:
-            return "#d7301f";
-        case pop_density > 2000:
-            return "#ef6548";
-        case pop_density > 1000:
-            return "#fc8d59";
-        case pop_density > 750:
-            return "#fdbb84";
-        case pop_density > 500:
-            return "#fdd49e";
-        case pop_density > 250:
-            return "#fee8c8";
-        case pop_density > 150:
-            return "#fff7ec";
-        default:
-            return "#ffffcc";
-    };
-}
+// function getColor(pop_density) {
+//     switch (true) {
+//         case pop_density > 5000:
+//             return "#7f0000";
+//         case pop_density > 4000:
+//             return "#b30000";
+//         case pop_density > 3000:
+//             return "#d7301f";
+//         case pop_density > 2000:
+//             return "#ef6548";
+//         case pop_density > 1000:
+//             return "#fc8d59";
+//         case pop_density > 750:
+//             return "#fdbb84";
+//         case pop_density > 500:
+//             return "#fdd49e";
+//         case pop_density > 250:
+//             return "#fee8c8";
+//         case pop_density > 150:
+//             return "#fff7ec";
+//         default:
+//             return "#ffffcc";
+//     };
+// }
+// function style(feature) {
+//     return {
+//         fillColor: getColor(featureCollection.features.properties.B01001_calc_PopDensity),
+//         weight: 2,
+//         opacity: 1,
+//         color: 'white',
+//         dashArray: '3',
+//         fillOpacity: 0.7
+//     };
+// }
+
 //create function for circle styles
-function circleStyle(rev) {
-    return {
-        stroke: false,
-        radius: (rev * 2.5),
-        fillColor: "green",
-        color: "green",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8,
-    };
-}
+// function circleStyle(rev) {
+//     return {
+//         stroke: false,
+//         radius: (rev * 2.5),
+//         fillColor: "green",
+//         color: "green",
+//         weight: 1,
+//         opacity: 1,
+//         fillOpacity: 0.8,
+//     };
+// }
 var cityMarkers = [];
 
 for (var i = 0; i < top_2019.length; i++) {
     // loop through the cities array, create a new marker, push it to the cityMarkers array
     cityMarkers.push(
-        L.circleMarker(top_2019[i].location, {
+        L.marker(top_2019[i].location, {
             stroke: false,
             radius: (top_2019[i].total_rev * 2.5),
             color: "green",
@@ -127,18 +140,19 @@ for (var i = 0; i < top_2019.length; i++) {
             fillOpacity: 0.8
         }
         ).bindPopup("<h1> " + top_2019[i].name + "<hr> Rev Share "
-            + top_2019[i].total_rev + "%</hr>",
-            "</h1>")
-    )
+            + top_2019[i].total_rev + "%</hr>" +  "<hr> Rank # "
+            + top_2019[i].rank + "</hr>",
+            "</h1>").addTo(myMap)
+    );
 
 };
 
 var covidMarker = L.marker([41.084541, -81.6530644]);
 
-var cityLayer = L.layerGroup(cityMarkers).addTo(myMap);
+var cityLayer = L.layerGroup(cityMarkers);
 var covidLayer = L.layerGroup(covidMarker);
 // Create the tile layer that will be the background of our map 
-var light =L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+var light = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
     tileSize: 512,
     maxZoom: 18,
@@ -153,90 +167,106 @@ var light =L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?
 var link = "https://opendata.arcgis.com/datasets/21843f238cbb46b08615fc53e19e0daf_1.geojson";
 // var file = "Population_Density_County.csv";
 var geojson;
-// var test = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-//     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-//     tileSize: 512,
-//     maxZoom: 18,
-//     zoomOffset: -1,
-//     id: "mapbox/dark-v10",
-//     accessToken: API_KEY
-// });
-
-// // var file = "Population_Density_County.csv";
-// var density = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-//     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-//     tileSize: 512,
-//     maxZoom: 18,
-//     zoomOffset: -1,
-//     id: "mapbox/light-v10",
-//     accessToken: API_KEY},
 d3.json(link, function (data) {
     console.log(data);
-    geojson = L.choropleth(data, {
-        // style: function(features) {
-        //     return {
-        //       color: "white",
-        //       // Call the chooseColor function to decide which color to color our neighborhood (color based on borough)
-        //       fillColor: getColor(features.B01001_calc_PopDensity),
-        //       fillOpacity: 0.5,
-        //       weight: 1.5
-        //     };
-        //   },
-
-        // Define what  property in the features to use
-        valueProperty: "B01001_calc_PopDensity",
-
-        // Set color scale
-        scale: ["#ffffb2", "#b10026"],
-
-        // Number of breaks in step range
-        steps: 10,
-
-        // q for quartile, e for equidistant, k for k-means
-        mode: "q",
-        style: {
-            // Border color
-            color: "#fff",
+    function getColor(pop_density) {
+        switch (true) {
+            case pop_density > 2000:
+                return "#7f0000";
+            case pop_density > 1000:
+                return "#b30000";
+            case pop_density > 500:
+                return "#d7301f";
+            case pop_density > 400:
+                return "#ef6548";
+            case pop_density > 250:
+                return "#fc8d59";
+            case pop_density > 200:
+                return "#fdbb84";
+            case pop_density > 150:
+                return "#fdd49e";
+            case pop_density > 100:
+                return "#fee8c8";
+            case pop_density > 50:
+                return "#fff7ec";
+            default:
+                return "#bdbdbd";
+        };
+    }
+    function styles(feature) {
+        return {
+            fillColor: getColor(feature.properties.B01001_calc_PopDensity),
+            borderColor: "black",
             weight: 1,
-            fillOpacity: 0.8
+            opacity: 1,
+            color: '#fff',
+            // dashArray: '',
+            // stroke: 'black',
+            fillOpacity: 0.9
         }
-    }).addTo(myMap);
-
-
-    var legend = L.control({ position: "bottomright" });
-    legend.onAdd = function () {
-        var div = L.DomUtil.create("div", "info legend");
-        var limits = geojson.options.limits;
-        var colors = geojson.options.colors;
-        var labels = [];
-
-        // Add min & max
-        var legendInfo = "<h1>County Pop Density</h1>"
-        //  +
-        // "<div class=\"labels\">" +
-        // "<div class=\"min\">" + limits[0] + "</div>" +
-        // "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-        // "</div>";
-
-        div.innerHTML = legendInfo;
-
-        limits.forEach(function (limit, index) {
-            labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
-        });
-
-        div.innerHTML += "<ul>" + labels.join("") + "</ul>";
-        return div;
-    };
-
-    // Adding legend to the map
-    // legend.addTo(myMap);
-
-
+     };
+    L.geoJson(data, {style: styles}).addTo(myMap);
 });
+// = L.choropleth(data, {
+
+// L.geoJson(link).addTo(myMap);
+//     // Define what  property in the features to use
+//     valueProperty: "B01001_calc_PopDensity",
+
+//     // Set color scale
+//     scale: ["#ffffb2", "#b10026"],
+
+//     // Number of breaks in step range
+//     steps: 10,
+
+//     // q for quartile, e for equidistant, k for k-means
+//     mode: "q",
+//     style: style
+//     // {
+//     //     // Border color
+//     //     color: "#fff",
+//     //     weight: 1,
+//     //     fillOpacity: 0.8
+//     // }
+
+
+
+var legend = L.control({ position: "bottomright" });
+legend.onAdd = function () {
+    var div = L.DomUtil.create("div", "info legend");
+    var limits = geojson.options.limits;
+    var colors = geojson.options.colors;
+    var labels = [];
+
+    // Add min & max
+    var legendInfo = "<h1>County Pop Density</h1>"
+    //  +
+    // "<div class=\"labels\">" +
+    // "<div class=\"min\">" + limits[0] + "</div>" +
+    // "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
+    // "</div>";
+
+    div.innerHTML = legendInfo;
+
+    limits.forEach(function (limit, index) {
+        labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+    });
+
+    div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+    return div;
+
+    legend.addTo(myMap);
+};
+
+// Adding legend to the map
+// legend.addTo(myMap);
+
+
+
 
 var overlayMaps = {
     Cities: cityLayer,
-    Covid: covidLayer
+    // Covid: covidLayer
 };
 var baseMaps = {
     "light": light,
@@ -245,7 +275,7 @@ var baseMaps = {
 // var myMap = L.map("mapid", {
 //     center: [36.1868683, -87.065443],
 //     zoom: 4,
-//     layers: [light, cityLayer, covidLayer]
+//     layers: [light, cityLayer]
 // });
 
 // L.control.layers(baseMaps, overlayMaps, {
