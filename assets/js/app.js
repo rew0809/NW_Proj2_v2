@@ -1,3 +1,5 @@
+// var url="/";
+// d3.json(url, function(error, covidData) {
 d3.csv("assets/data/covidCasesAndSettles.csv", function(error, covidData) {
 	if (error) throw error;
 	// Print the tvData
