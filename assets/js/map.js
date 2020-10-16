@@ -1,11 +1,12 @@
 // MAP MAP MAP//
-//create array of 2019 top 10 hotel market data
+
 var myMap = L.map("mapidchoro", {
-    center: [39.8090883,-98.5642993],
-    zoom: 4,
+    center: [39.8090883, -98.5642993],
+    zoom: 5,
     // layers: [light, cityLayer]
 });
 
+//create array of 2019 top 10 hotel market data
 const top_2019 = [{
     location: [40.7128, -74.0059],
     name: "New York",
@@ -77,54 +78,70 @@ const top_2019 = [{
     rank: 10
 }
 ];
-//create fucntion for custom population density shading/coloring for choropleth map
-// function getColor(pop_density) {
-//     switch (true) {
-//         case pop_density > 5000:
-//             return "#7f0000";
-//         case pop_density > 4000:
-//             return "#b30000";
-//         case pop_density > 3000:
-//             return "#d7301f";
-//         case pop_density > 2000:
-//             return "#ef6548";
-//         case pop_density > 1000:
-//             return "#fc8d59";
-//         case pop_density > 750:
-//             return "#fdbb84";
-//         case pop_density > 500:
-//             return "#fdd49e";
-//         case pop_density > 250:
-//             return "#fee8c8";
-//         case pop_density > 150:
-//             return "#fff7ec";
-//         default:
-//             return "#ffffcc";
-//     };
-// }
-// function style(feature) {
-//     return {
-//         fillColor: getColor(featureCollection.features.properties.B01001_calc_PopDensity),
-//         weight: 2,
-//         opacity: 1,
-//         color: 'white',
-//         dashArray: '3',
-//         fillOpacity: 0.7
-//     };
-// }
 
-//create function for circle styles
-// function circleStyle(rev) {
-//     return {
-//         stroke: false,
-//         radius: (rev * 2.5),
-//         fillColor: "green",
-//         color: "green",
-//         weight: 1,
-//         opacity: 1,
-//         fillOpacity: 0.8,
-//     };
-// }
+//create an Array of top 2020 travel destinations
+const top_2020 = [{
+    location: [44.585403,-111.0745213],
+    name: "Yellowstone National Park",
+    pop_density: "",
+    rank: 1
+},
+{
+    location: [39.1985427,-106.871744],
+    name: "Aspen, Co",
+    pop_density: "",
+    rank: 2
+},
+{
+    location: [48.6596967,-114.4063062],
+    name: "Glacier National Park",
+    pop_density: "",
+    rank: 3
+},
+{
+    location: [45.679605,-111.1209420],
+    name: "Bozeman, MT",
+    pop_density: "",
+    rank: 4
+},
+{
+    location: [39.5013534,-106.1132516],
+    name: "Breckenridge, C",
+    pop_density: "",
+    rank: 5
+},
+{
+    location: [33.3904235,-105.7550302],
+    name: "Ruidoso, NM",
+    pop_density: "",
+    rank: 6
+},
+{
+    location: [35.7273147,-83.533036],
+    name: "Gatlinburg, TN",
+    pop_density: "",
+    rank: 7
+},
+{
+    location: [39.6061485,-106.3571604],
+    name: "Vail, CO",
+    pop_density: "",
+    rank: 8
+},
+{
+    location: [45.8515844,-84.6552296],
+    name: "Mackinac, MI",
+    pop_density: "",
+    rank: 9
+},
+{
+    location: [36.2088272,-81.6976386],
+    name: "Boone, NC",
+    pop_density: "",
+    rank: 10
+}];
+
+
 var cityMarkers = [];
 
 for (var i = 0; i < top_2019.length; i++) {
@@ -140,17 +157,28 @@ for (var i = 0; i < top_2019.length; i++) {
             fillOpacity: 0.8
         }
         ).bindPopup("<h1> " + top_2019[i].name + "<hr> Rev Share "
-            + top_2019[i].total_rev + "%</hr>" +  "<hr> Rank # "
+            + top_2019[i].total_rev + "%</hr>" + "<hr> Rank # "
             + top_2019[i].rank + "</hr>",
-            "</h1>").addTo(myMap)
+            "</h1>")
     );
 
 };
 
-var covidMarker = L.marker([41.084541, -81.6530644]);
+var covidMarkers = []
+
+for (var i = 0; i < top_2020.length; i++) {
+    // loop through the 2020 array, create a new marker, push it to the covidMarkers array
+    covidMarkers.push(
+        L.marker(top_2020[i].location
+        ).bindPopup("<h1> " + top_2020[i].name + "<hr> Rank # "
+            + top_2020[i].rank + "</hr>",
+            "</h1>")
+    );
+
+};
 
 var cityLayer = L.layerGroup(cityMarkers);
-var covidLayer = L.layerGroup(covidMarker);
+var covidLayer = L.layerGroup(covidMarkers);
 // Create the tile layer that will be the background of our map 
 var light = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -163,9 +191,9 @@ var light = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}
 
 
 
-// var queryurl = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/Average_Household_Size_and_Population_Density_WFL1/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=json";
+//Geojson link
 var link = "https://opendata.arcgis.com/datasets/21843f238cbb46b08615fc53e19e0daf_1.geojson";
-// var file = "Population_Density_County.csv";
+//use geojson to buils a county level choropleth map
 var geojson;
 d3.json(link, function (data) {
     console.log(data);
@@ -204,70 +232,62 @@ d3.json(link, function (data) {
             // stroke: 'black',
             fillOpacity: 0.9
         }
-     };
-    L.geoJson(data, {style: styles}).addTo(myMap);
+    };
+    L.geoJson(data, { style: styles }).addTo(myMap);
 });
-// = L.choropleth(data, {
+function getColor(pop_density) {
+    switch (true) {
+        case pop_density > 2000:
+            return "#7f0000";
+        case pop_density > 1000:
+            return "#b30000";
+        case pop_density > 500:
+            return "#d7301f";
+        case pop_density > 400:
+            return "#ef6548";
+        case pop_density > 250:
+            return "#fc8d59";
+        case pop_density > 200:
+            return "#fdbb84";
+        case pop_density > 150:
+            return "#fdd49e";
+        case pop_density > 100:
+            return "#fee8c8";
+        case pop_density > 50:
+            return "#fff7ec";
+        default:
+            return "#bdbdbd";
+    };
+};
+//add population density legend
+var legend = L.control({ position: 'bottomright' });
 
-// L.geoJson(link).addTo(myMap);
-//     // Define what  property in the features to use
-//     valueProperty: "B01001_calc_PopDensity",
+legend.onAdd = function (myMap) {
+        var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 50, 100, 150, 200, 250, 400, 500, 1000, 2000],
+        colors = ["#bdbdbd", "#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"],
+        labels = [];
+    
 
-//     // Set color scale
-//     scale: ["#ffffb2", "#b10026"],
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + colors[i] + '"></i> ' +
+           '>'+ grades[i] + '<br>';
+    }
 
-//     // Number of breaks in step range
-//     steps: 10,
-
-//     // q for quartile, e for equidistant, k for k-means
-//     mode: "q",
-//     style: style
-//     // {
-//     //     // Border color
-//     //     color: "#fff",
-//     //     weight: 1,
-//     //     fillOpacity: 0.8
-//     // }
-
-
-
-var legend = L.control({ position: "bottomright" });
-legend.onAdd = function () {
-    var div = L.DomUtil.create("div", "info legend");
-    var limits = geojson.options.limits;
-    var colors = geojson.options.colors;
-    var labels = [];
-
-    // Add min & max
-    var legendInfo = "<h1>County Pop Density</h1>"
-    //  +
-    // "<div class=\"labels\">" +
-    // "<div class=\"min\">" + limits[0] + "</div>" +
-    // "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-    // "</div>";
-
-    div.innerHTML = legendInfo;
-
-    limits.forEach(function (limit, index) {
-        labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
-    });
-
-    div.innerHTML += "<ul>" + labels.join("") + "</ul>";
     return div;
-
-    legend.addTo(myMap);
 };
 
-// Adding legend to the map
-// legend.addTo(myMap);
+legend.addTo(myMap);
 
-
-
-
-var overlayMaps = {
-    Cities: cityLayer,
-    // Covid: covidLayer
+//build overlays
+let overlayMaps = {
+    2019: cityLayer,
+    2020: covidLayer,
 };
+
+//build basemaps
 var baseMaps = {
     "light": light,
     // "density": density
@@ -278,6 +298,8 @@ var baseMaps = {
 //     layers: [light, cityLayer]
 // });
 
-// L.control.layers(baseMaps, overlayMaps, {
-//     collapsed: false
-// }).addTo(myMap);
+
+//add control  for layers
+L.control.layers(baseMaps, overlayMaps, {
+    collapsed: false
+}).addTo(myMap);
