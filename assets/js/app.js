@@ -35,7 +35,7 @@ d3.csv("assets/data/covidCasesAndSettles.csv", function(error, covidData) {
 			pointRadius: 0,
 			pointHoverRadius: 10
 		}, {
-			label: 'SP 500',
+			label: 'S&P 500',
 			borderColor: window.chartColors.blue,
 			backgroundColor: window.chartColors.blue,
 			fill: false,
